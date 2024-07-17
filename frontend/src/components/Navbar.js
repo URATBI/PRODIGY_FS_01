@@ -1,39 +1,46 @@
-import React, { useContext, useEffect, useState } from 'react';
+
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { fetchProtected } from '../api/auth';
+
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const [data, setData] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const getProtected = async () => {
-      try {
-        if (user && user.token) {
-          const res = await fetchProtected(user.token);
-          setData(res);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getProtected();
-  }, [user]);
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <button onClick={logout}>Logout</button>
-          </li>
-        </ul>
-      </nav>
-      <div>
-        {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'No protected data'}
-      </div>
-    </div>
+    <nav>
+      <div className="logo">SecureAuth</div>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        {user ? (
+          <>
+            <li>
+              <Link to="/protected">Protected</Link>
+            </li>
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </nav>
   );
 };
 

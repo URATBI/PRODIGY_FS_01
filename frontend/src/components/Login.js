@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { login } from '../api/auth';
 import AuthContext from '../context/AuthContext';
 
@@ -18,6 +19,7 @@ const Login = () => {
     try {
       const res = await login({ email, password });
       loginUser(res.token);
+      <Navigate to="/Home" />
     } catch (error) {
       console.error(error);
     }
